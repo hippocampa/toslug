@@ -1,37 +1,46 @@
+#include <getopt.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
+#include <unistd.h> // getopt
 
-static const char helpText[] = 
-  "toslug\n\n"
-  "usage:\n"
-  "toslug <text> <flags>\n\n"
-  "flags:\n"
-  "-u\tUse hyphen separator. (default)\n"
-  "-U\tUse underscore separator.";
+#define FLAG_UNDERSCORE (1U << 0)
 
-enum Separator{
-  HYPHEN,
-  UNDERSCORE
-};
+static const char help_text[] =
+    "toslug\n\n"
+    "usage:\n"
+    "toslug <text> <flags>\n\n"
+    "flags:\n"
+    "-u\t--use-hyphen\tUse hyphen separator. (default)\n"
+    "-U\t--use-underscore\tUse underscore separator.";
 
+int main(int argc, char *argv[]) {
+  uint8_t flags = 0; // default to FLAG_HYPHEN
+  int opt;
 
-
-
-int main(int argc, char *argv[]){
-  enum Separator sep = HYPHEN;
-  if (argc < 2) {
-    fprintf(stderr, "%s\n", helpText);
-    return EXIT_FAILURE;
-  } else{
-    for (size_t i = 2 ; i < argc ;i++) {
-      if (strcmp(argv[i], "-u")) {
-        sep = HYPHEN;
-      }
+  while ((opt = getopt(argc, argv, "uU")) != -1) {
+    switch (opt) {
+    case 'u':
+      flags &= ~FLAG_UNDERSCORE;
+      break;
+    case 'U':
+      flags |= FLAG_UNDERSCORE;
+      break;
+    default:
+      fprintf(stderr, "%s", help_text);
+      return EXIT_FAILURE;
     }
-    printf("%s\n", );
-
   }
-  return EXIT_SUCCESS;
+
+  if (optind >= argc) {
+    fprintf(stderr, "Error: Missing text input.\n%s\n", help_text);
+    return EXIT_FAILURE;
+  }
+  char *input_text = argv[optind];
+  char separator = (flags & FLAG_UNDERSCORE) ? '_' : '-';
+  printf("Separator: %c\n", separator);
+  printf("Text: %s\n", input_text);
 }

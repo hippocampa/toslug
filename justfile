@@ -1,3 +1,3 @@
 run:
   make
-  ./bin/toslug test hello world
+  ./bin/toslug "hello world"
