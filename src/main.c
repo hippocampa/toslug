@@ -6,8 +6,8 @@ static const char helpText[] =
   "usage:\n"
   "toslug <text> <flags>\n\n"
   "flags:\n"
-  "-h\t--use-hyphen\tUse hyphen separator. (default)\n"
-  "-u\t--use-underscore\tUse underscore separator.";
+  "-u\t--use-hyphen\tUse hyphen separator. (default)\n"
+  "-U\t--use-underscore\tUse underscore separator.";
 
 
 
