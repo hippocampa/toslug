@@ -1,13 +1,16 @@
 #include <ctype.h>
-#include <getopt.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
-#include <unistd.h> // getopt
+
+#ifdef _WIN32
+#include "getopt.h"
+#else
+#include <unistd.h>
+#endif
 
 #define FLAG_UNDERSCORE (1U << 0)
 
@@ -25,7 +28,7 @@ int main(int argc, char *argv[]) {
   uint8_t flags = 0; // default to FLAG_HYPHEN
   int opt;
 
-  while ((opt = getopt(argc, argv, "uU")) != -1) {
+  while ((opt = getopt(argc, argv, "uUh")) != -1) {
     switch (opt) {
     case 'u':
       flags &= ~FLAG_UNDERSCORE;
@@ -35,8 +38,7 @@ int main(int argc, char *argv[]) {
       break;
     case 'h':
       printf("%s\n", help_text);
-      return EXIT_FAILURE;
-
+      return EXIT_SUCCESS;
     default:
       fprintf(stderr, "%s\n", help_text);
       return EXIT_FAILURE;
@@ -70,7 +72,7 @@ void transform(char *str, char *sep) {
     }
     i++;
   }
-  if (j > 0 && str[j - 1] == '-') {
+  if (j > 0 && str[j - 1] == *sep) {
     j--;
   }
 
