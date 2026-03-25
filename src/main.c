@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
   char separator = (flags & FLAG_UNDERSCORE) ? '_' : '-';
 
   transform(text, &separator);
-  printf("%s", text);
+  printf("%s\n", text);
   return EXIT_SUCCESS;
 }
 
